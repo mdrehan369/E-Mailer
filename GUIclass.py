@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from tkinter.filedialog import askopenfile
 
 class GUIcustom(tk.Tk):
 
@@ -45,15 +46,17 @@ class GUIcustom(tk.Tk):
 
         return frame
 
-    def createLabel(self, master, side, fill= "none", expand= False, text= None, image= None, resize= (0,0), padx= 0, pady= 0, anchor= "center", bg= None, width=0, height=0, font="lucida"):
+    def createLabel(self, master, side="top", fill= "none", expand= False, text= None, image= None, resize= (0,0), padx= 0, pady= 0, anchor= "center", bg= None, width=0, height=0, font="lucida", x= None, y= None):
 
         img = None
         if(image != None):
             img = self.setImage(image, resize)
 
-        label = tk.Label(master= master, bg = bg, text= text, image= img, width=width, height=height, font=font)
-        label.pack(side=side, fill= fill, expand= expand, padx=padx, pady= pady, anchor=anchor)
-
+        label = tk.Label(master= master, bg = bg, text= text, image= img, width=width, height=height, font=font, anchor="w")
+        if(x is None):
+            label.pack(side=side, fill= fill, expand= expand, padx=padx, pady= pady, anchor=anchor)
+        else:
+            label.place(x= x, y= y)
         return label
 
     def createEntry(self, master, side, padx= 0, pady= 0, anchor= "center", width=0, textvar= None, fill="none", expand= False, ipadx=0, ipady= 0, font= "lucida"):
@@ -62,3 +65,63 @@ class GUIcustom(tk.Tk):
         entry.pack(side=side, padx=padx, pady= pady, anchor=anchor, fill=fill, expand=expand, ipady=ipady, ipadx= ipadx)
 
         return entry
+    
+    def createOptionmenu(self, master, variable, values, x, y):
+
+        optionmenu = tk.OptionMenu(master, variable, *values)
+        optionmenu.place(x= x, y= y)
+
+        return optionmenu
+    
+    def createStringvar(self, master, value= ""):
+
+        stringvar = tk.StringVar(master= master, value=value)
+
+        return stringvar
+
+    def createButton(self, master, text, command, x, y, bg, fg= "black", width=None, height= None):
+
+        btn = tk.Button(master, bg= bg, text=text, command=command, fg= fg, width=width, height=height)
+        btn.place(x= x, y= y)
+
+        return btn
+
+
+    def createListbox(self, master, height, width, x, y, font= "lucida"):
+
+        scroll = tk.Scrollbar(master, orient="vertical")
+
+        lb = tk.Listbox(master=master, height=height, width=width, yscrollcommand=scroll.set, font="lucida 11", selectmode=tk.MULTIPLE)
+        scroll.config(command=lb.yview)
+        lb.place(x= x, y= y)
+        
+        return lb
+    
+    def openFile(self):
+
+        file = askopenfile(mode="r",
+                             filetypes=[
+                                        ("Any", "*.*"),
+                                        ("Text File", "*.txt"),
+                                        ("Python Source File", "*.py"),
+                                        ("Cpp Source File", "*.cpp"),
+                                        ("Java Source File", "*.java"),
+                                        ("PNG File", "*.png"),
+                                        ("JPG File", "*.jpg"),
+                                        ("Excel Spreadsheet", "*.xlsx")
+                                        ])
+        
+        
+        return file
+    
+    def createTextarea(self, master, height, width, x, y):
+
+        text = tk.Text(master=master, height=height, width=width, font="lucida 11", padx=3, pady=3, relief=tk.SUNKEN, borderwidth=2, exportselection=True)
+        text.place(x= x, y= y)
+
+        scroll = tk.Scrollbar(self, orient="vertical")
+        scroll.pack()
+        text.config(yscrollcommand=scroll.set)
+        scroll.config(command=text.yview)
+
+        return text
