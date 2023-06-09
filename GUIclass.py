@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter.filedialog import askopenfile
+from tkinter import messagebox
 
 class GUIcustom(tk.Tk):
 
@@ -48,21 +49,23 @@ class GUIcustom(tk.Tk):
 
     def createLabel(self, master, side="top", fill= "none", expand= False, text= None, image= None, resize= (0,0), padx= 0, pady= 0, anchor= "center", bg= None, width=0, height=0, font="lucida", x= None, y= None):
 
-        img = None
-        if(image != None):
-            img = self.setImage(image, resize)
-
-        label = tk.Label(master= master, bg = bg, text= text, image= img, width=width, height=height, font=font, anchor="w")
+        label = tk.Label(master= master, bg = bg, text= text, image= image, width=width, height=height, font=font, anchor="w")
         if(x is None):
             label.pack(side=side, fill= fill, expand= expand, padx=padx, pady= pady, anchor=anchor)
         else:
             label.place(x= x, y= y)
         return label
 
-    def createEntry(self, master, side, padx= 0, pady= 0, anchor= "center", width=0, textvar= None, fill="none", expand= False, ipadx=0, ipady= 0, font= "lucida"):
+    def createEntry(self, master, side="top", padx= 0, pady= 0, anchor= "center", width=0, textvar= None, fill="none", expand= False, ipadx=0, ipady= 0, font= "lucida", x= None, y= None):
 
-        entry = tk.Entry(master=master, textvariable=textvar, width=width, font=font)
-        entry.pack(side=side, padx=padx, pady= pady, anchor=anchor, fill=fill, expand=expand, ipady=ipady, ipadx= ipadx)
+        entry = tk.Entry(master=master, textvariable=textvar, width=width, font=font, bd=5, relief="sunken")
+
+        if(x is None):
+            entry.pack(side=side, padx=padx, pady= pady, anchor=anchor, fill=fill, expand=expand, ipady=ipady, ipadx= ipadx)
+
+        else:
+            entry.place(x= x, y= y)
+
 
         return entry
     
@@ -125,3 +128,11 @@ class GUIcustom(tk.Tk):
         scroll.config(command=text.yview)
 
         return text
+    
+    def createCheckbox(self, master, x, y, text):
+
+        cb = tk.Checkbutton(master, text=text)
+        cb.place(x= x, y= y)
+
+        return cb
+    

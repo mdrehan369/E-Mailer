@@ -1,5 +1,5 @@
 # import tkinter as t
-# from PIL import Image, ImageTk
+from PIL import Image, ImageTk
 
 
 # #basic root window
@@ -35,22 +35,23 @@
 
 from GUIclass import GUIcustom as GUI
 import EmailSendingModule as email
+adresses = ["mdrehan4650@gmail.com"]
 
 to_lb = None
 attachments = []
 attach_lb = None
 
-def send_email1():
-    emails = ""
-    to_email_lst = to_lb.get(0, "end")
-    for email1 in to_email_lst:
-        emails = emails + " " + email1
 
-    email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=attachments)
-    status_var.set("Email Sent!")
-    status_label.config(bg= "green")
-    # status_var.set("Email Not Sent!")
-    # status_label.config(bg= "red")
+def send_email1():
+    status_var.set("Sending...")
+    try:
+        to_email_lst = to_lb.get(0, "end")
+        email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=attachments)
+        status_var.set("Email Sent!")
+        status_label.config(bg= "green")
+    except:
+        status_var.set("Email Not Sent!")
+        status_label.config(bg= "red")
 
 def add_reciever_email(event):
     global to_lb
@@ -60,7 +61,6 @@ def add_reciever_email(event):
         to_lb.bind("<Delete>", deleteOption)
 
     to_lb.insert("end", to_email.get())
-    # to_email_lst.append(to_email.get())
     to_email.set("")
     if(to_lb.size() == 1 or to_lb.size() == 2):
         to_lb.config(height=to_lb.size())
@@ -147,17 +147,24 @@ def cancel():
     subject.delete("1.0", "end")
     body.delete("1.0", "end")
 
-
+# def createeLoginWindow():
+#     if(adresses is None):
+#         win = GUI("Login", 400, 200, False)
+#         emaillabel = win.createLabel(win, x= )
 
 root = GUI("E-Mailer", 744, 546, False)
 
-header = root.createFrame(root, bg="red", height=20, side="top", fill="x", packpropagate=True)
+header = root.createFrame(root, bg="#686869", height=20, side="top", fill="x", packpropagate=True)
 
-logo = root.createLabel(header, image="basic design.png", side="left", anchor="w", resize=(100, 50))
+rawImage = Image.open("logo.jpeg")
+rawImage = rawImage.resize((200,200))
+img = ImageTk.PhotoImage(image=rawImage)
 
+logo = root.createLabel(header, image=img, side="left", anchor="w", resize=(140, 50))
 
+root.iconphoto(False, img)
 
-bottomFrame = root.createFrame(root, expand=True, fill="x", side="bottom", height=20, packpropagate=True, anchor="s", bg="yellow")
+bottomFrame = root.createFrame(root, expand=True, fill="x", side="bottom", height=20, packpropagate=True, anchor="s")
 
 
 leftFrame = root.createFrame(root, width= 50, side= "left", fill="y", height= 60, packpropagate=True)
@@ -169,7 +176,7 @@ fromFrame = root.createFrame(leftFrame, side="top", width= 50, height=10, fill="
 fromLabel = root.createLabel(fromFrame, side="left", anchor="center", text="From : ", width=12, font="lucida 15")
 from_addr = root.createStringvar(root)
 from_addr.set("Select your email")
-adresses = {"mdrehan4650@gmail.com", "email_sender2@gmail.com", "email_sender3@gmail.com", "email_sender4@gmail.com"}
+
 fromMenu = root.createOptionmenu(master= fromFrame, variable=from_addr, values=adresses, x= 150, y= 13)
 
 to_email_lst = []
@@ -196,14 +203,12 @@ body_label = root.createLabel(rightFrame,x=10,y=70, font="lucida 15 ", padx=5, t
 body = root.createTextarea(rightFrame, height=11, width=40, x= 10, y= 100)
 body.bind("<Control c>", copy1)
 
-send_btn = root.createButton(bottomFrame, "Send", command= send_email1, x = 375, y= 20, bg="blue", width=8, height=1)
+send_btn = root.createButton(bottomFrame, "Send", command= send_email1, x = 375, y= 20, bg="#2596be", width=8, height=1)
 send_btn.config(font="lucida 13")
 
 cancel_btn = root.createButton(bottomFrame, "Cancel", command= cancel, x = 275, y= 20, bg="blue", width=8, height=1)
 cancel_btn.config(font="lucida 13")
 
-# statusbar = root.createFrame(bottomFrame, side="bottom", bg= "grey", fill="x", height=5, packpropagate=True)
-# statusbar.config(relief="sunken", borderwidth=2)
 status_var = root.createStringvar(root, "Compose Email")
 status_label = root.createLabel(bottomFrame, side="bottom", font="lucida 11 italic", bg= "grey", anchor="w", height=1, fill="x")
 status_label.config(textvariable=status_var)

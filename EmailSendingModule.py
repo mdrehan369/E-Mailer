@@ -3,7 +3,7 @@ from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import formatdate, COMMASPACE
-import os
+from os.path import basename
 #pass = tlrqrwlogevtafip
 
 #message body
@@ -25,8 +25,8 @@ def send_email(from_addr, to_addr, subject, files, body):
         for file in files:
             with open(f"{file.name}", "rb") as f:
                 part = MIMEApplication(f.read(),
-                Name = f"{file.name}")
-            part['Content-Disposition'] = f'attachment; filename="{file.name}"'
+                Name = f"{basename(file.name)}")
+            part['Content-Disposition'] = f'attachment; filename="{basename(file.name)}"'
             msg.attach(part)
 
     connection.sendmail(from_addr, to_addr, msg.as_string())
@@ -36,3 +36,12 @@ def send_email(from_addr, to_addr, subject, files, body):
     print("Done")
 
 
+def check_login(email, password):
+    connection = smtplib.SMTP("smtp.gmail.com", 587)
+    connection.starttls()
+    try:
+        connection.login(email, password)
+    except:
+        return False
+    
+    return True
