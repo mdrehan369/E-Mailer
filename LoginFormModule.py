@@ -7,6 +7,8 @@ email = None
 pwd_entry = None
 show = False
 pwd = None
+win = None
+flag = False
 
 def changevar(event):
     if(email.get() == "Enter your email"):
@@ -30,21 +32,38 @@ def showpass():
 
     show = not show
 
+def updateAddr(adresses):
+    df = pd.read_csv("saved emails.csv")
+    series = df["ids"]
+    ids = list(series)
+
+    for id in ids:
+        adresses.append(id)
+
+
 def login():
     email_id = email.get()
     pwd_id = pwd.get()
     df = pd.read_csv("saved emails.csv")
     df.set_index("ids", inplace=True)
-    if(df.loc[f"{email_id}"]["pass"] == f"{pwd_id}"):
-        messagebox.showinfo("Already logged in")
-        return
+    try:
+        if(df.loc[f"{email_id}"]["pass"] == f"{pwd_id}"):
+            messagebox.showinfo("Logged in","Already logged in")
+            win.destroy()
+            return
+        
+    except:
+        pass
         
 
     if(em.check_login(email_id, pwd_id)):
         messagebox.showinfo("Login successful","Logged in successfully")
         with open("saved emails.csv", "a") as f:
             f.write(f"{email_id},{pwd_id}")
-        return            
+        win.destroy()
+        global flag
+        flag = True
+        return  
 
     else:
         messagebox.showerror("Login failed","Email address or password is incorrect")
@@ -54,6 +73,7 @@ def loginForm():
     global email
     global pwd_entry
     global pwd
+    global win
 
     win = GUI("Login", 350, 250, False)
     login_label = win.createLabel(win, text="Login", font="lucida 20 bold", x= 130, y= 20)
@@ -73,5 +93,6 @@ def loginForm():
     login_btn = win.createButton(win, "Login", login, x= 135, y= 200, bg= "blue", width=5, height=1)
     login_btn.config(font="lucida 13")
     win.mainloop()
+    return flag
 
-loginForm()
+# loginForm()

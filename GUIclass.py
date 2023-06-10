@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from tkinter.filedialog import askopenfile
-from tkinter import messagebox
+from tkinter.filedialog import askopenfiles
+# from tkinter import messagebox
 
 class GUIcustom(tk.Tk):
 
@@ -102,7 +102,7 @@ class GUIcustom(tk.Tk):
     
     def openFile(self):
 
-        file = askopenfile(mode="r",
+        file = askopenfiles(mode="r",
                              filetypes=[
                                         ("Any", "*.*"),
                                         ("Text File", "*.txt"),
@@ -135,4 +135,15 @@ class GUIcustom(tk.Tk):
         cb.place(x= x, y= y)
 
         return cb
+
+    def createMenu(self, master, command1):
+
+        mymenu = tk.Menu(master)
+        mymenu.add_command(label="Log in", command=command1)
+
+        # master.config(Menu= mymenu)
+        self.config(menu=mymenu)
+
+        return mymenu
+    
     

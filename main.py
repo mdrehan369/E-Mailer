@@ -1,6 +1,6 @@
 # import tkinter as t
 from PIL import Image, ImageTk
-
+from os.path import basename
 
 # #basic root window
 # root = t.Tk()
@@ -35,12 +35,15 @@ from PIL import Image, ImageTk
 
 from GUIclass import GUIcustom as GUI
 import EmailSendingModule as email
-adresses = ["mdrehan4650@gmail.com"]
+import LoginFormModule as log
 
+# adresses = ["mdrehan4650@gmail.com"]
+adresses = []
 to_lb = None
 attachments = []
 attach_lb = None
 
+log.updateAddr(adresses)
 
 def send_email1():
     status_var.set("Sending...")
@@ -69,15 +72,17 @@ def add_reciever_email(event):
 
 def attachfile():
     global attach_lb
-    file = root.openFile()
+    files = root.openFile()
 
 
-    if file is not None:
+    if files is not None:
         if(attach_lb is None):
             attach_lb = root.createListbox(attachmentFrame, height=0, width= 37, x= 112, y= 33)
             attach_lb.bind("<Delete>", deleteAttach)
-        attachments.append(file)
-        attach_lb.insert("end", file.name)
+
+        for file in files:
+            attachments.append(file)
+            attach_lb.insert("end", basename(file.name))
 
     if(attach_lb is not None and attach_lb.size() < 5):
         attach_lb.config(height=attach_lb.size())
@@ -147,6 +152,11 @@ def cancel():
     subject.delete("1.0", "end")
     body.delete("1.0", "end")
 
+def login():
+    if(log.loginForm() == True):
+        log.updateAddr(adresses)
+
+
 # def createeLoginWindow():
 #     if(adresses is None):
 #         win = GUI("Login", 400, 200, False)
@@ -203,10 +213,10 @@ body_label = root.createLabel(rightFrame,x=10,y=70, font="lucida 15 ", padx=5, t
 body = root.createTextarea(rightFrame, height=11, width=40, x= 10, y= 100)
 body.bind("<Control c>", copy1)
 
-send_btn = root.createButton(bottomFrame, "Send", command= send_email1, x = 375, y= 20, bg="#2596be", width=8, height=1)
+send_btn = root.createButton(bottomFrame, "Send", command= send_email1, x = 375, y= 20, bg="#686869", width=8, height=1)
 send_btn.config(font="lucida 13")
-
-cancel_btn = root.createButton(bottomFrame, "Cancel", command= cancel, x = 275, y= 20, bg="blue", width=8, height=1)
+#bg="#2596be"
+cancel_btn = root.createButton(bottomFrame, "Cancel", command= cancel, x = 275, y= 20, bg="#686869", width=8, height=1)
 cancel_btn.config(font="lucida 13")
 
 status_var = root.createStringvar(root, "Compose Email")
@@ -214,6 +224,7 @@ status_label = root.createLabel(bottomFrame, side="bottom", font="lucida 11 ital
 status_label.config(textvariable=status_var)
 status_label.config(relief="sunken")
 
-
 root.bind("<Button>", updateStatus)
+
+mymenu = root.createMenu(root, login)
 root.mainloop()
