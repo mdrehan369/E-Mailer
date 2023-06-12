@@ -23,10 +23,10 @@ def send_email(from_addr, to_addr, subject, files, body):
     msg.attach(MIMEText(body))
     if(files is not None):
         for file in files:
-            with open(f"{file.name}", "rb") as f:
+            with open(f"{file}", "rb") as f:
                 part = MIMEApplication(f.read(),
-                Name = f"{basename(file.name)}")
-            part['Content-Disposition'] = f'attachment; filename="{basename(file.name)}"'
+                Name = f"{basename(file)}")
+            part['Content-Disposition'] = f'attachment; filename="{basename(file)}"'
             msg.attach(part)
 
     connection.sendmail(from_addr, to_addr, msg.as_string())

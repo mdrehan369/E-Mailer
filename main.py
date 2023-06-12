@@ -1,55 +1,25 @@
-# import tkinter as t
+
 from PIL import Image, ImageTk
 from os.path import basename
-
-# #basic root window
-# root = t.Tk()
-# root.geometry("744x546")
-# root.title("E-Mailer")
-# root.resizable(0,0)
-
-# #header frame
-# header = t.Frame(root, background="red", height=100)
-# header.pack(side="top", fill="x")
-# header.pack_propagate(0)
-
-# #setting logo
-# image = Image.open("basic design.png")
-# image = image.resize((100, 50))
-# img = ImageTk.PhotoImage(image=image)
-# logo = t.Label(header, image=img)
-# logo.pack(side="left", anchor="w")
-
-# # setting heading
-# heading = t.Label(header, text= "E-Mailer", font="20", bg="red")
-# heading.pack(side="left", anchor="center", fill="both", expand=True)
-
-# #Left side frame
-# leftFrame = t.Frame(root, bg="green", width=372)
-# leftFrame.pack(side="left", fill="y")
-
-# rightFrame = t.Frame(root, bg="blue", width=372)
-# rightFrame.pack(side="left", fill="y")
-
-# root.mainloop()
-
 from GUIclass import GUIcustom as GUI
 import EmailSendingModule as email
 import LoginFormModule as log
 
-# adresses = ["mdrehan4650@gmail.com"]
+
 adresses = []
 to_lb = None
 attachments = []
 attach_lb = None
 
-log.updateAddr(adresses)
+adresses = log.updateAddr(adresses)
 
 def send_email1():
     status_var.set("Sending...")
+    to_email_lst = to_lb.get(0, "end")
+    if attach_lb is not None:
+        files = attach_lb.get(0, "end")
     try:
-        to_email_lst = to_lb.get(0, "end")
-        email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=attachments)
+        email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=files)
         status_var.set("Email Sent!")
         status_label.config(bg= "green")
     except:
@@ -81,8 +51,8 @@ def attachfile():
             attach_lb.bind("<Delete>", deleteAttach)
 
         for file in files:
-            attachments.append(file)
-            attach_lb.insert("end", basename(file.name))
+            # attachments.append(file)
+            attach_lb.insert("end", file.name)
 
     if(attach_lb is not None and attach_lb.size() < 5):
         attach_lb.config(height=attach_lb.size())
@@ -153,9 +123,11 @@ def cancel():
     body.delete("1.0", "end")
 
 def login():
-    if(log.loginForm() == True):
-        log.updateAddr(adresses)
-
+    global adresses
+    log.loginForm()
+    adresses = log.updateAddr(adresses)
+    # fromMenu.configure(value=)
+    print(adresses)
 
 # def createeLoginWindow():
 #     if(adresses is None):
@@ -186,7 +158,7 @@ fromFrame = root.createFrame(leftFrame, side="top", width= 50, height=10, fill="
 fromLabel = root.createLabel(fromFrame, side="left", anchor="center", text="From : ", width=12, font="lucida 15")
 from_addr = root.createStringvar(root)
 from_addr.set("Select your email")
-
+#md.latif2@gmail.com4
 fromMenu = root.createOptionmenu(master= fromFrame, variable=from_addr, values=adresses, x= 150, y= 13)
 
 to_email_lst = []

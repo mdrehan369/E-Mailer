@@ -40,6 +40,8 @@ def updateAddr(adresses):
     for id in ids:
         adresses.append(id)
 
+    return adresses
+
 
 def login():
     email_id = email.get()
@@ -60,9 +62,9 @@ def login():
         messagebox.showinfo("Login successful","Logged in successfully")
         with open("saved emails.csv", "a") as f:
             f.write(f"{email_id},{pwd_id}")
-        win.destroy()
         global flag
         flag = True
+        win.destroy()
         return  
 
     else:

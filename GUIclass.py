@@ -73,7 +73,7 @@ class GUIcustom(tk.Tk):
 
         optionmenu = tk.OptionMenu(master, variable, *values)
         optionmenu.place(x= x, y= y)
-
+        # optionmenu.option_add()
         return optionmenu
     
     def createStringvar(self, master, value= ""):
@@ -114,7 +114,7 @@ class GUIcustom(tk.Tk):
                                         ("Excel Spreadsheet", "*.xlsx")
                                         ])
         
-        
+        print(file)
         return file
     
     def createTextarea(self, master, height, width, x, y):
