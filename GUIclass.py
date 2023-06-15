@@ -114,7 +114,7 @@ class GUIcustom(tk.Tk):
                                         ("Excel Spreadsheet", "*.xlsx")
                                         ])
         
-        print(file)
+        # print(file)
         return file
     
     def createTextarea(self, master, height, width, x, y):
@@ -136,10 +136,11 @@ class GUIcustom(tk.Tk):
 
         return cb
 
-    def createMenu(self, master, command1):
+    def createMenu(self, master, command1, command2):
 
         mymenu = tk.Menu(master)
         mymenu.add_command(label="Log in", command=command1)
+        mymenu.add_command(label="Log out", command=command2)
 
         # master.config(Menu= mymenu)
         self.config(menu=mymenu)

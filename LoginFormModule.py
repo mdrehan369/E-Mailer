@@ -9,6 +9,7 @@ show = False
 pwd = None
 win = None
 flag = False
+win2 = None
 
 def changevar(event):
     if(email.get() == "Enter your email"):
@@ -42,6 +43,34 @@ def updateAddr(adresses):
 
     return adresses
 
+def removeEmail(email):
+    df = pd.read_csv("saved emails.csv")
+    # df.set_index("ids", inplace=True)
+    index = 0
+    for id in df["ids"]:
+        if(id == email):
+            break
+        else:
+            index = index+1
+    try:
+        df.drop(index, inplace=True)
+        df.to_csv("saved emails.csv", index= False)
+        messagebox.showinfo("Logout Successful", "Succesfull, Please restart the app to see changes")
+        win2.destroy()
+    except:
+        messagebox.showerror("Logout Failed", "Please enter the correct email id")
+
+def logout():
+    global win2
+    win2 = GUI("Log Out", 250, 150, False)
+    win2.createLabel(win2, text="Log Out", font="lucida 20 bold", x= 75, y= 20)
+    var = win2.createStringvar(win2, "Select Your Id")
+    df = pd.read_csv("saved emails.csv")
+    ids = df["ids"]
+    win2.createOptionmenu(win2, var, ids, x=20, y=70).configure(width=25)
+    btn = win2.createButton(win2, text="log out", x= 80, y= 100, bg="#686869", command=lambda:removeEmail(var.get()), width=5, height=1)
+    btn.config(font="lucida 13")
+    win2.mainloop()
 
 def login():
     email_id = email.get()
@@ -59,7 +88,7 @@ def login():
         
 
     if(em.check_login(email_id, pwd_id)):
-        messagebox.showinfo("Login successful","Logged in successfully")
+        messagebox.showinfo("Login successful","Logged in successfully. Please restart the app to see the changes")
         with open("saved emails.csv", "a") as f:
             f.write(f"{email_id},{pwd_id}")
         global flag
@@ -92,9 +121,19 @@ def loginForm():
     checkbox = win.createCheckbox(win, 55, 150, "Show Password")
     checkbox.config(command=showpass)
 
-    login_btn = win.createButton(win, "Login", login, x= 135, y= 200, bg= "blue", width=5, height=1)
+    login_btn = win.createButton(win, "Login", login, x= 135, y= 200, bg="#686869", width=5, height=1)
     login_btn.config(font="lucida 13")
     win.mainloop()
     return flag
 
+def getPwd(email):
+    df = pd.read_csv("saved emails.csv")
+    df.set_index("ids", inplace=True)
+    pwd = df.loc[email]
+    # print(type(pwd["pass"]))
+    return pwd["pass"]
+
 # loginForm()
+# logout()
+# removeEmail("mdrehan4650@gmail.com")
+getPwd("mdrehan9007@gmail.com")

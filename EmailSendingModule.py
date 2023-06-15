@@ -7,14 +7,14 @@ from os.path import basename
 #pass = tlrqrwlogevtafip
 
 #message body
-def send_email(from_addr, to_addr, subject, files, body):
+def send_email(from_addr, to_addr, subject, files, body, pwd):
     # it creates a server
     connection = smtplib.SMTP("smtp.gmail.com", 587)
     # this commands ensures a secure data transfer
     connection.ehlo()
     connection.starttls()
     # this command is used for login
-    connection.login(user="mdrehan4650@gmail.com", password="tlrqrwlogevtafip")
+    connection.login(user=from_addr, password=pwd)
     msg = MIMEMultipart()
     msg["From"] = from_addr
     msg["To"] = COMMASPACE.join(to_addr)
@@ -33,7 +33,7 @@ def send_email(from_addr, to_addr, subject, files, body):
     # it is used to close the connection
     connection.close()
 
-    print("Done")
+    # print("Done")
 
 
 def check_login(email, password):

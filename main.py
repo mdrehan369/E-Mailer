@@ -1,6 +1,6 @@
 
 from PIL import Image, ImageTk
-from os.path import basename
+# from os.path import basename
 from GUIclass import GUIcustom as GUI
 import EmailSendingModule as email
 import LoginFormModule as log
@@ -16,15 +16,24 @@ adresses = log.updateAddr(adresses)
 def send_email1():
     status_var.set("Sending...")
     to_email_lst = to_lb.get(0, "end")
+    pwd = log.getPwd(from_addr.get())
+    files = None
     if attach_lb is not None:
         files = attach_lb.get(0, "end")
-    try:
-        email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=files)
-        status_var.set("Email Sent!")
-        status_label.config(bg= "green")
-    except:
-        status_var.set("Email Not Sent!")
-        status_label.config(bg= "red")
+    # try:
+    #     email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=files, pwd=pwd)
+    #     status_var.set("Email Sent!")
+    #     status_label.config(bg= "green")
+    # except:
+    #     status_var.set("Email Not Sent!")
+    #     status_label.config(bg= "red")
+
+    email.send_email(from_addr=from_addr.get(), to_addr=to_email_lst, subject=subject.get("1.0", "end"), body=body.get("1.0", "end"), files=files, pwd=pwd)
+    status_var.set("Email Sent!")
+    status_label.config(bg= "green")
+# except:
+#     status_var.set("Email Not Sent!")
+#     status_label.config(bg= "red")
 
 def add_reciever_email(event):
     global to_lb
@@ -126,13 +135,8 @@ def login():
     global adresses
     log.loginForm()
     adresses = log.updateAddr(adresses)
-    # fromMenu.configure(value=)
-    print(adresses)
+    # print(adresses)
 
-# def createeLoginWindow():
-#     if(adresses is None):
-#         win = GUI("Login", 400, 200, False)
-#         emaillabel = win.createLabel(win, x= )
 
 root = GUI("E-Mailer", 744, 546, False)
 
@@ -198,5 +202,5 @@ status_label.config(relief="sunken")
 
 root.bind("<Button>", updateStatus)
 
-mymenu = root.createMenu(root, login)
+mymenu = root.createMenu(root, login, log.logout)
 root.mainloop()
